@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type CSSProperties } from 'react';
 import { site } from '@/lib/site';
-import { CTA_EM, CTA_LINES } from './cta';
+import { CTA_MAIN, CTA_MAIN_EM, CTA_SUB, CTA_SUB_EM } from './cta';
 import { ArrowRightIcon, StarIcon, UsersIcon } from './icons';
 
 /**
@@ -48,10 +48,10 @@ export function StickyCta() {
           href={site.ctaHref}
           tabIndex={on ? 0 : -1}
           data-cta
-          style={{ '--cta-em': CTA_EM } as CSSProperties}
+          style={{ '--cta-main-em': CTA_MAIN_EM, '--cta-sub-em': CTA_SUB_EM } as CSSProperties}
         >
           <span className="cta-label">
-            <span className="cta-l">{CTA_LINES[0]}</span> <span className="cta-l">{CTA_LINES[1]}</span>
+            <span className="cta-main">{CTA_MAIN}</span> <span className="cta-sub">{CTA_SUB}</span>
           </span>
           <span className="arrow" aria-hidden>
             <ArrowRightIcon size={12} />

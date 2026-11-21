@@ -32,7 +32,10 @@ export function Hero() {
       <div className="sdp-wrap sdp-hero-inner">
         <div className="sdp-eyebrow-pill">
           <span className="glowdot" aria-hidden />
-          <span>For Men &amp; Women Who’ve Tried Multiple Astrology &amp; Numerology Readings Yet Still Feel Stuck</span>
+          <span className="eb-text">
+            <span className="eb-kicker">For Men &amp; Women</span>{' '}
+            <span className="eb-body">Who’ve Tried Multiple Astrology &amp; Numerology Readings Yet Still Feel Stuck</span>
+          </span>
         </div>
 
         <h1 className="sdp-h1" data-sdp-reveal style={d('.06s')}>

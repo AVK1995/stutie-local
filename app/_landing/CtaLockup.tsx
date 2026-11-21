@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { site } from '@/lib/site';
-import { CTA_EM, CTA_LINES } from './cta';
+import { CTA_MAIN, CTA_MAIN_EM, CTA_SUB, CTA_SUB_EM } from './cta';
 import { ArrowRightIcon, FlameIcon, SealCheckIcon, StarIcon } from './icons';
 
 /**
@@ -17,9 +17,14 @@ const BADGES = [
 
 export function CtaButton() {
   return (
-    <a className="sdp-cta" href={site.ctaHref} data-cta style={{ '--cta-em': CTA_EM } as CSSProperties}>
+    <a
+      className="sdp-cta"
+      href={site.ctaHref}
+      data-cta
+      style={{ '--cta-main-em': CTA_MAIN_EM, '--cta-sub-em': CTA_SUB_EM } as CSSProperties}
+    >
       <span className="cta-label">
-        <span className="cta-l">{CTA_LINES[0]}</span> <span className="cta-l">{CTA_LINES[1]}</span>
+        <span className="cta-main">{CTA_MAIN}</span> <span className="cta-sub">{CTA_SUB}</span>
       </span>
       <span className="arrow" aria-hidden>
         <ArrowRightIcon />

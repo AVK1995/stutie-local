@@ -52,7 +52,7 @@
 .sg-book .bk-steps li.done .bk-dot { background: var(--brand-deep); color: var(--ink-dark); }
 .sg-book .bk-steps li.now .bk-dot { background: var(--action, var(--brand)); color: var(--cta-ink); font-weight: 700; }
 
-.sg-book .bk-mast { text-align: center; margin: 0 auto 32px; max-width: 700px; }
+.sg-book .bk-mast { text-align: center; margin: 34px auto 32px; max-width: 700px; }
 .sg-book .bk-pill {
   display: inline-block;
   font-family: var(--fb); font-size: 10.5px; font-weight: 700;
@@ -65,8 +65,14 @@
   font-family: var(--fh); font-weight: var(--fh-weight, 400);
   font-size: clamp(32px, 5vw, 52px); line-height: 1.15; letter-spacing: -.01em;
   color: var(--ink); margin: 0 0 14px; text-wrap: balance;
+  /* Cormorant's default old-style "1" reads as "I"; "1:1" needs lining figures */
+  font-variant-numeric: lining-nums;
 }
-.sg-book .bk-mast h1 em { font-style: normal; color: var(--accent-word, var(--brand)); }
+/* always two lines: "Book Your Private" / "1:1 Breakthrough Call" */
+.sg-book .bk-mast h1 em {
+  display: block; white-space: nowrap;
+  font-style: normal; color: var(--accent-word, var(--brand));
+}
 .sg-book .bk-deck {
   font-size: 15.5px; line-height: 1.7; color: var(--ink-soft);
   margin: 0 auto; max-width: 540px;
@@ -320,6 +326,8 @@
 }
 @media (max-width: 640px) {
   .sg-book .bk-strip { font-size: 10px; letter-spacing: .08em; gap: 6px; padding: 10px 14px; }
+  .sg-book .bk-mast { margin-top: 26px; }
+  .sg-book .bk-mast h1 { font-size: min(32px, 9.4vw); }
   .sg-book .bk-steps { margin: 22px 0 18px; }
   .sg-book .bk-steps li + li::before { width: 26px; margin: 0 9px; }
   .sg-book .bk-steps li { font-size: 10px; letter-spacing: .08em; }
