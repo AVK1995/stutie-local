@@ -1,30 +1,16 @@
-import { CTA_LABEL } from '@/lib/site';
+import { CTA_MAIN, CTA_SUB } from '@/lib/site';
 
 /**
- * The CTA label split into the two lines it takes below desktop. Derived from
- * CTA_LABEL, never retyped: the cut is the word boundary that makes the
- * longer line shortest, so any label LAUNCH sets still splits evenly.
+ * The CTA is always exactly two lines: CTA_MAIN (caps, 800) over CTA_SUB
+ * (sentence case, 600). Neither line may wrap, so on narrow screens each
+ * line's font-size is solved from the width it has to fit in.
+ *
+ * Widths in em per line, measured in the browser against the shipped
+ * Manrope with the CSS letter-spacing applied (main .04em → 15.91em,
+ * sub .01em → 24.26em), plus ~3% safety margin. Re-measure if either
+ * string changes.
  */
-function balance(label: string): [string, string] {
-  const words = label.trim().split(/\s+/);
-  if (words.length < 2) return [label, ''];
-  let cut = 1;
-  let best = Infinity;
-  for (let i = 1; i < words.length; i++) {
-    const longer = Math.max(words.slice(0, i).join(' ').length, words.slice(i).join(' ').length);
-    if (longer < best) {
-      best = longer;
-      cut = i;
-    }
-  }
-  return [words.slice(0, cut).join(' '), words.slice(cut).join(' ')];
-}
+export const CTA_MAIN_EM = '16.4';
+export const CTA_SUB_EM = '25.0';
 
-export const CTA_LINES = balance(CTA_LABEL);
-
-/**
- * Width of the longer line in em, for the fluid font-size on narrow screens:
- * Manrope 800 caps average ~0.68em a character plus .05em tracking. An
- * estimate, not a measurement against the shipped woff2.
- */
-export const CTA_EM = (Math.max(CTA_LINES[0].length, CTA_LINES[1].length) * 0.73 + 0.6).toFixed(1);
+export { CTA_MAIN, CTA_SUB };

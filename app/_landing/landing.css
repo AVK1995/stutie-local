@@ -181,25 +181,31 @@
   background: var(--grad-cta);
   color: var(--cta-ink);
   border-radius: 999px;
-  font-family: var(--fb); text-transform: uppercase; font-weight: 800;
-  font-size: 18px; letter-spacing: .05em; line-height: 1.25;
+  font-family: var(--fb); font-weight: 800;
+  font-size: 18px; line-height: 1.2;
   text-align: center; text-decoration: none;
   border: 0; cursor: pointer;
   position: relative; overflow: hidden;
   box-shadow: var(--glow-cta), var(--inset-hi);
   transition: transform .2s, filter .2s, box-shadow .2s;
 }
-.sdp-cta .cta-label { min-width: 0; }
-.sdp-cta::after {
-  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .40), transparent);
-  transform: skewX(-20deg); transition: left .9s; pointer-events: none;
+/* Two lines, always: caps main line over a sentence-case subline. Neither
+   wraps; below desktop each line's size is solved from --cta-avail (the
+   label's width at that breakpoint) over the line's measured em width. */
+.sdp-cta .cta-label, .sdp-stuck-go .cta-label {
+  display: flex; flex-direction: column; align-items: center; gap: .3em;
+  min-width: 0; text-align: center;
 }
+.sdp-cta .cta-main, .sdp-cta .cta-sub,
+.sdp-stuck-go .cta-main, .sdp-stuck-go .cta-sub { display: block; white-space: nowrap; }
+.sdp-cta .cta-main, .sdp-stuck-go .cta-main { text-transform: uppercase; letter-spacing: .04em; font-weight: 800; }
+.sdp-cta .cta-sub, .sdp-stuck-go .cta-sub { text-transform: none; letter-spacing: .01em; font-weight: 600; opacity: .9; }
+.sdp-cta .cta-main { font-size: 20px; }
+.sdp-cta .cta-sub { font-size: 14.5px; }
 .sdp-root .sdp-cta:hover {
   transform: translateY(-2px); filter: brightness(1.06);
   box-shadow: var(--glow-cta-hover), inset 0 1px 0 rgba(255, 255, 255, .3);
 }
-.sdp-cta:hover::after { left: 120%; }
 .sdp-cta:focus-visible { outline: 2px solid var(--brand-deep); outline-offset: 3px; }
 .sdp-cta .arrow {
   flex: 0 0 26px; width: 26px; height: 26px; border-radius: 50%;
@@ -209,6 +215,50 @@
 }
 .sdp-cta:hover .arrow { transform: translateX(4px); }
 .sdp-cta .arrow svg { display: block; width: 14px; height: 14px; }
+
+/* ── 03b · CTA MOTION: always-on attention loop ─────────────────
+   1. a light sweep crosses the button every ~3.6s
+   2. a soft ring breathes out from the pill (glow colour per variant)
+   3. the arrow nudges forward on a quicker beat, its disc pulsing
+   All three stop under prefers-reduced-motion (section 92). */
+.sdp-root .sdp-cta, .sdp-root .sdp-stuck-go {
+  --cta-glow: var(--glow-cta);
+  --cta-ring-rgb: var(--brand-rgb);
+  animation: sdpCtaRing 2.4s cubic-bezier(.2, .6, .35, 1) infinite;
+}
+.sdp-root .sdp-dark .sdp-cta, .sdp-root .sdp-stuck-go {
+  --cta-glow: var(--glow-cta-on-dark);
+  --cta-ring-rgb: var(--brand-bright-rgb);
+}
+@keyframes sdpCtaRing {
+  0%        { box-shadow: var(--cta-glow), var(--inset-hi), 0 0 0 0 rgba(var(--cta-ring-rgb), .5); }
+  70%, 100% { box-shadow: var(--cta-glow), var(--inset-hi), 0 0 0 14px rgba(var(--cta-ring-rgb), 0); }
+}
+
+.sdp-root .sdp-stuck-go { position: relative; overflow: hidden; }
+.sdp-cta::after, .sdp-stuck-go::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .45), transparent);
+  transform: skewX(-20deg); pointer-events: none;
+  animation: sdpCtaShine 3.6s ease-in-out infinite;
+}
+@keyframes sdpCtaShine {
+  0%        { left: -60%; }
+  38%, 100% { left: 130%; }
+}
+
+.sdp-cta .arrow, .sdp-stuck-go .arrow { animation: sdpArrowDisc 1.6s ease-in-out infinite; }
+.sdp-cta .arrow svg, .sdp-stuck-go .arrow svg { animation: sdpArrowNudge 1.6s ease-in-out infinite; }
+@keyframes sdpArrowNudge {
+  0%, 100% { transform: translateX(-1px); }
+  45%      { transform: translateX(4px); }
+  60%      { transform: translateX(2px); }
+}
+@keyframes sdpArrowDisc {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .35); }
+  50%      { box-shadow: 0 0 0 5px rgba(255, 255, 255, 0); }
+}
+.sdp-root .sdp-cta:hover, .sdp-root .sdp-stuck-go:hover { animation-play-state: paused; }
 
 /* On a dark band the saffron CTA sinks into the ground, so it turns marigold. */
 .sdp-root .sdp-dark .sdp-cta {
@@ -826,15 +876,16 @@
   min-width: 420px; max-width: 100%; min-height: 46px;
   padding: 10px 24px 9px; border-radius: 999px;
   background: var(--grad-cta-on-dark); color: var(--cta-ink-on-dark);
-  font-family: var(--fb); font-weight: 800; text-transform: uppercase;
-  font-size: 14px; letter-spacing: .04em; line-height: 1.25;
+  font-family: var(--fb); font-weight: 800;
+  font-size: 14px; line-height: 1.2;
   box-shadow: var(--glow-cta-on-dark), var(--inset-hi);
   transition: transform .2s, filter .2s;
 }
 .sdp-root .sdp-stuck-go:hover { transform: translateY(-1px); filter: brightness(1.06); }
 .sdp-root .sdp-stuck-go:focus-visible { outline: 2px solid var(--brand-bright); outline-offset: 3px; }
-.sdp-stuck-go .cta-label { text-align: center; min-width: 0; }
-.sdp-stuck-go .cta-l { display: block; white-space: nowrap; }
+.sdp-stuck-go .cta-label { gap: .2em; }
+.sdp-stuck-go .cta-main { font-size: 15px; }
+.sdp-stuck-go .cta-sub { font-size: 11.5px; }
 .sdp-stuck-go .arrow {
   flex: 0 0 22px; width: 22px; height: 22px; border-radius: 50%;
   display: grid; place-items: center; background: rgba(var(--ink-rgb), .12);
@@ -884,15 +935,16 @@
    re-measure against the shipped woff2 (skin law 5).
      "Get Answers To Your Biggest Life Questions"   ~17.6em → 2 lines at 38px on 390
      H2 "Your Horoscope Is Just One Piece Of ..."   ~19.7em → 2 lines at 30px on 390
-     CTA longer line "PRIVATE 1:1 BREAKTHROUGH CALL" ~21em, read from --cta-em
+     CTA lines: --cta-main-em / --cta-sub-em, measured, set in _landing/cta.ts
 ================================================================ */
 @media (max-width: 960px) {
   .sdp-cred-row { grid-template-columns: repeat(2, 1fr); gap: 10px; max-width: 540px; }
   .sdp-coach-grid { grid-template-columns: 300px 1fr; gap: 34px; }
 
-  /* the CTA goes to its two balanced lines below the width that holds one */
-  .sdp-root .sdp-cta { font-size: min(17px, calc((100vw - 150px) / var(--cta-em, 22))); padding: 15px 28px 13px; }
-  .sdp-cta .cta-l { display: block; white-space: nowrap; }
+  /* below desktop both CTA lines scale to the width they have, never wrapping */
+  .sdp-root .sdp-cta { --cta-avail: calc(100vw - 150px); padding: 15px 28px 13px; }
+  .sdp-cta .cta-main { font-size: min(19px, calc(var(--cta-avail) / var(--cta-main-em, 17))); }
+  .sdp-cta .cta-sub { font-size: min(14px, calc(var(--cta-avail) / var(--cta-sub-em, 25))); }
 }
 
 @media (max-width: 860px) {
@@ -939,15 +991,33 @@
   .sdp-root .sdp-hero-lead { font-size: 13.5px; line-height: 1.68; margin-bottom: 12px; }
   .sdp-root .sdp-sub { font-size: 14px; line-height: 1.68; margin-bottom: 32px; }
   .sdp-root h2.sdp-h2 { font-size: 31px; line-height: 1.1; }
-  .sdp-eyebrow-pill { font-size: 10px; letter-spacing: .1em; padding: 8px 14px 8px 12px; border-radius: 16px; }
+  /* phone: two tiers instead of three cramped caps lines —
+     "● FOR MEN & WOMEN" kicker over a readable title-case line */
+  .sdp-eyebrow-pill {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: 7px 8px; width: fit-content; max-width: 100%;
+    padding: 10px 18px 11px; border-radius: 16px;
+  }
+  .sdp-eyebrow-pill .eb-text { display: contents; }
+  .sdp-eyebrow-pill .glowdot { flex-basis: 7px; width: 7px; height: 7px; }
+  .sdp-eyebrow-pill .eb-kicker { font-size: 10.5px; letter-spacing: .16em; line-height: 1; }
+  .sdp-eyebrow-pill .eb-body {
+    flex: 1 0 100%;
+    font-size: 13.5px; font-weight: 600; letter-spacing: 0; line-height: 1.42;
+    text-transform: none; color: var(--ink); text-wrap: balance;
+  }
   .sdp-hero-markers, .sdp-hero-markers-row { gap: 6px; }
   .sdp-hero-markers { margin-bottom: 20px; }
   .sdp-marker-chip { font-size: 10.5px; padding: 6px 10px; letter-spacing: .03em; gap: 6px; }
   .sdp-marker-dot { width: 6px; height: 6px; flex-basis: 6px; }
   .sdp-root .sdp-portrait { --ph-h: 380px; }
 
-  .sdp-root .sdp-cta { font-size: min(15px, calc((100vw - 116px) / var(--cta-em, 22))); padding: 14px 18px 12px; gap: 10px; letter-spacing: .04em; }
-  .sdp-cta .arrow { flex: 0 0 22px; width: 22px; height: 22px; }
+  /* 44 gutter + 28 padding + 20 arrow + 8 gap = 100, +4 slack */
+  .sdp-root .sdp-cta { --cta-avail: calc(100vw - 104px); padding: 13px 14px 12px; gap: 8px; }
+  .sdp-cta .cta-main { font-size: min(17px, calc(var(--cta-avail) / var(--cta-main-em, 17))); }
+  .sdp-cta .cta-sub { font-size: min(13px, calc(var(--cta-avail) / var(--cta-sub-em, 25))); }
+  .sdp-cta .arrow { flex: 0 0 20px; width: 20px; height: 20px; }
+  .sdp-cta .arrow svg { width: 12px; height: 12px; }
   .sdp-risk-strip { gap: 8px 14px; }
   .sdp-risk-badge { font-size: 11.5px; }
 
@@ -984,8 +1054,10 @@
   .sdp-stuck-inner { gap: 7px; padding: 0 8px; }
   .sdp-root .sdp-stuck-go {
     width: 100%; min-width: 0;
-    font-size: min(13.5px, calc((100vw - 84px) / var(--cta-em, 22))); padding: 10px 14px 9px; letter-spacing: .03em;
+    --cta-avail: calc(100vw - 84px); padding: 9px 14px 8px;
   }
+  .sdp-stuck-go .cta-main { font-size: min(14.5px, calc(var(--cta-avail) / var(--cta-main-em, 17))); }
+  .sdp-stuck-go .cta-sub { font-size: min(11px, calc(var(--cta-avail) / var(--cta-sub-em, 25))); }
   .sdp-stuck-trust { gap: 0 12px; padding: 0 12px; }
   .sdp-stuck-trust li { font-size: clamp(8.5px, 2.5vw, 10.5px); gap: 4px; }
 }
@@ -994,6 +1066,8 @@
   .sdp-h1-l1 { font-size: 34px; }
   .sdp-h1-l2 { font-size: 19px; }
   .sdp-root h2.sdp-h2 { font-size: 27px; }
+  .sdp-eyebrow-pill { padding: 10px 14px 11px; }
+  .sdp-eyebrow-pill .eb-body { font-size: 12px; }
   .sdp-stuck-trust { gap: 0 8px; padding: 0 10px; }
 }
 
@@ -1024,4 +1098,10 @@
   .sdp-armed .sdp-root [data-sdp-reveal] { opacity: 1; transform: none; }
 
   .sdp-stuck, .sdp-stuck.on { transition: none; }
+
+  .sdp-root .sdp-cta, .sdp-root .sdp-stuck-go,
+  .sdp-cta::after, .sdp-stuck-go::after,
+  .sdp-cta .arrow, .sdp-stuck-go .arrow,
+  .sdp-cta .arrow svg, .sdp-stuck-go .arrow svg { animation: none; }
+  .sdp-cta::after, .sdp-stuck-go::after { display: none; }
 }

@@ -7,8 +7,9 @@ export const site = {
   priceInr: 0,
 };
 
-/** The copy's CTA, verbatim. */
-export const CTA_LABEL = 'Click Here To Book Your Private 1:1 Breakthrough Call';
+/** The CTA, verbatim from the client: a main line and a subline, always two lines. */
+export const CTA_MAIN = 'Speak 1:1 With Stutie Gupta';
+export const CTA_SUB = '15-Min Consultation To See If We Are Right For You';
 
 /* Neutral labels for the GA4 item. They never reach Meta. */
 export const PRODUCT_LABEL = 'Private Call';

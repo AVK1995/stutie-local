@@ -193,7 +193,7 @@ export default function BookACallPage() {
           <div className="bk-mast">
             <span className="bk-pill">Book your call</span>
             <h1>
-              Book Your Private 1:1 <em>Breakthrough Call</em>
+              Book Your Private <em>1:1 Breakthrough Call</em>
             </h1>
             <p className="bk-deck">{CALL_DECK}</p>
           </div>
